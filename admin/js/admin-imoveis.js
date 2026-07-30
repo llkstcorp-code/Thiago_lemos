@@ -264,7 +264,7 @@ const AdminImoveis = {
         const { data: imovel } = await this.buscarPorId(id);
         if (!imovel) return;
 
-        // Trocar para view de formulário
+        // Trocar para view de formulário (limpa o form e dispara o render das amenidades)
         AdminUI.switchView('novo-imovel');
         document.getElementById('page-title').textContent = 'Editar Imóvel';
 
@@ -276,7 +276,10 @@ const AdminImoveis = {
             AdminFotos.carregar(imovel.imovel_fotos);
         }
 
-        // Marcar amenidades
+        // Esperar o grid de amenidades terminar de renderizar antes de marcar,
+        // senão o innerHTML do render assíncrono apaga as marcações
+        await AdminUI.amenidadesProntas();
+
         if (imovel.imovel_amenidades) {
             AdminAmenidades.marcarSelecionadas(imovel.imovel_amenidades.map(a => a.amenidade_id));
         }
@@ -286,8 +289,15 @@ const AdminImoveis = {
      * Preencher formulário com dados do imóvel
      */
     preencherFormulario(imovel) {
+        // O hidden que identifica o registro em edição chama-se "imovel-id".
+        // Sem isto o salvar() enxerga id vazio e cria um imóvel novo.
+        document.getElementById('imovel-id').value = imovel.id ?? '';
+
+        // published_at só deve ser definido na primeira publicação
+        this._publishedAtOriginal = imovel.published_at || null;
+
         const campos = [
-            'id', 'titulo', 'descricao', 'tipo', 'finalidade', 'status',
+            'titulo', 'descricao', 'tipo', 'finalidade', 'status',
             'preco', 'preco_condominio', 'preco_iptu',
             'area_m2', 'area_construida_m2', 'quartos', 'suites', 'banheiros',
             'vagas_garagem', 'andar', 'total_andares',
@@ -312,13 +322,8 @@ const AdminImoveis = {
         const form = document.getElementById('form-imovel');
         if (form) form.reset();
         document.getElementById('imovel-id').value = '';
-        AdminAmenidades.getSelecionadas().forEach(id => {
-            const item = document.querySelector(`.amenidade-item[data-id="${id}"]`);
-            if (item) {
-                item.classList.remove('selected');
-                item.querySelector('input').checked = false;
-            }
-        });
+        this._publishedAtOriginal = null;
+        AdminAmenidades.limparSelecao();
         AdminFotos.reset();
     },
 
@@ -328,6 +333,22 @@ const AdminImoveis = {
     async salvar(event) {
         if (event) event.preventDefault();
 
+        // Evita que dois cliques rápidos gerem dois registros
+        if (this._salvando) return;
+        this._salvando = true;
+
+        const btnSalvar = document.querySelector('#form-imovel button[type="submit"]');
+        if (btnSalvar) btnSalvar.disabled = true;
+
+        try {
+            await this._salvarInterno();
+        } finally {
+            this._salvando = false;
+            if (btnSalvar) btnSalvar.disabled = false;
+        }
+    },
+
+    async _salvarInterno() {
         const id = document.getElementById('imovel-id').value;
 
         // Coletar dados do formulário
@@ -361,8 +382,8 @@ const AdminImoveis = {
             cep: document.getElementById('cep').value.trim() || null
         };
 
-        // Se marcando como disponível e não tem published_at, setar
-        if (dados.status === 'disponivel') {
+        // Se marcando como disponível e ainda não foi publicado, setar
+        if (dados.status === 'disponivel' && !this._publishedAtOriginal) {
             dados.published_at = new Date().toISOString();
         }
 
@@ -386,7 +407,8 @@ const AdminImoveis = {
         const amenidades = AdminAmenidades.getSelecionadas();
         await this.salvarAmenidades(imovelId, amenidades);
 
-        // Upload de fotos
+        // Fotos: apagar as removidas e subir/atualizar as demais
+        await AdminFotos.removerPendentes();
         if (AdminFotos.fotos.length > 0) {
             AdminUI.toast('Fazendo upload das fotos...', 'success');
             await AdminFotos.uploadTodas(imovelId);

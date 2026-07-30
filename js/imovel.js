@@ -119,14 +119,6 @@
             document.getElementById('galeria-badge').style.display = 'block';
         }
 
-        // Corretor
-        if (imovel.corretor_nome) {
-            document.getElementById('corretor-card').style.display = 'block';
-            document.getElementById('corretor-nome').textContent = imovel.corretor_nome;
-            document.getElementById('corretor-creci').textContent =
-                imovel.corretor_creci ? `CRECI ${imovel.corretor_creci}` : '';
-        }
-
         // Botão WhatsApp
         const numeroWpp = formatarWhatsapp(imovel.corretor_telefone) || '5535997418298';
         const mensagem = encodeURIComponent(

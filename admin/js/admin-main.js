@@ -40,7 +40,9 @@ const AdminUI = {
                 break;
             case 'novo-imovel':
                 AdminImoveis.limparFormulario();
-                AdminAmenidades.renderizarCheckboxes('amenidades-grid');
+                // Guardamos a promise: quem for marcar amenidades (edição)
+                // precisa esperar o grid existir antes de marcar
+                this._amenidadesPromise = AdminAmenidades.renderizarCheckboxes('amenidades-grid');
                 AdminFotos.init();
                 AdminFotos.reset();
                 // Forçar init do form uma vez
@@ -61,6 +63,13 @@ const AdminUI = {
 
         // Fechar sidebar mobile
         document.querySelector('.sidebar')?.classList.remove('open');
+    },
+
+    /**
+     * Resolve quando o grid de amenidades do formulário terminou de renderizar
+     */
+    async amenidadesProntas() {
+        await this._amenidadesPromise;
     },
 
     /**

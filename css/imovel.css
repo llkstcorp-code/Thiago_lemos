@@ -273,19 +273,6 @@ main {
     color: var(--color-white);
 }
 
-.imovel-corretor-card {
-    background: var(--color-gray-900);
-    border: 1px solid var(--color-gray-800);
-    border-radius: var(--border-radius-lg);
-    padding: var(--space-md) var(--space-lg);
-}
-
-.imovel-corretor-card h4 {
-    color: var(--color-gray-400);
-    font-size: var(--fs-small);
-    margin-bottom: var(--space-xs);
-}
-
 @media (max-width: 968px) {
     .imovel-detalhes-grid {
         grid-template-columns: 1fr;

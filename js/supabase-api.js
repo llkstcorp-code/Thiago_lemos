@@ -164,6 +164,7 @@ const ImoveisAPI = {
                     </p>
                     <div class="imovel-features">
                         ${imovel.quartos ? `<span><i class="fas fa-bed"></i> ${imovel.quartos} ${imovel.quartos > 1 ? 'quartos' : 'quarto'}</span>` : ''}
+                        ${imovel.suites ? `<span><i class="fas fa-door-closed"></i> ${imovel.suites} ${imovel.suites > 1 ? 'suítes' : 'suíte'}</span>` : ''}
                         ${imovel.banheiros ? `<span><i class="fas fa-bath"></i> ${imovel.banheiros} ${imovel.banheiros > 1 ? 'banheiros' : 'banheiro'}</span>` : ''}
                         ${imovel.area_m2 ? `<span><i class="fas fa-ruler-combined"></i> ${imovel.area_m2}m²</span>` : ''}
                         ${imovel.vagas_garagem ? `<span><i class="fas fa-car"></i> ${imovel.vagas_garagem} ${imovel.vagas_garagem > 1 ? 'vagas' : 'vaga'}</span>` : ''}

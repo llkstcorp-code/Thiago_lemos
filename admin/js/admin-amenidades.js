@@ -62,6 +62,15 @@ const AdminAmenidades = {
         });
     },
 
+    // Desmarcar tudo (inclusive o estado visual, que o form.reset() não limpa)
+    limparSelecao() {
+        document.querySelectorAll('#amenidades-grid .amenidade-item').forEach(item => {
+            const input = item.querySelector('input');
+            if (input) input.checked = false;
+            item.classList.remove('selected');
+        });
+    },
+
     // Obter IDs selecionados
     getSelecionadas() {
         const checks = document.querySelectorAll('#amenidades-grid input:checked');

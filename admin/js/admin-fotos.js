@@ -4,6 +4,7 @@
 
 const AdminFotos = {
     fotos: [], // { id?, file, url, storage_path?, isNew, isCover, ordem }
+    removidas: [], // fotos já salvas no banco que o usuário removeu
 
     /**
      * Inicializar zona de upload
@@ -12,6 +13,11 @@ const AdminFotos = {
         const zone = document.getElementById('upload-zone');
         const input = document.getElementById('foto-input');
         if (!zone || !input) return;
+
+        // switchView() chama init() toda vez que a tela abre; sem este guard
+        // os listeners se acumulam e cada foto é adicionada várias vezes
+        if (this._initialized) return;
+        this._initialized = true;
 
         zone.addEventListener('click', () => input.click());
 
@@ -141,11 +147,28 @@ const AdminFotos = {
 
     remover(idx) {
         if (!confirm('Remover esta foto?')) return;
-        this.fotos.splice(idx, 1);
+        const [removida] = this.fotos.splice(idx, 1);
+
+        // Foto que já existe no banco: marcar para exclusão ao salvar
+        if (removida && !removida.isNew && removida.id) {
+            this.removidas.push(removida);
+        }
+
         if (this.fotos.length > 0 && !this.fotos.some(f => f.isCover)) {
             this.fotos[0].isCover = true;
         }
+        this.fotos.forEach((f, i) => f.ordem = i);
         this.render();
+    },
+
+    /**
+     * Apagar do banco/storage as fotos removidas no formulário
+     */
+    async removerPendentes() {
+        for (const foto of this.removidas) {
+            await this.deletar(foto.id, foto.storage_path);
+        }
+        this.removidas = [];
     },
 
     reordenar(from, to) {
@@ -238,6 +261,7 @@ const AdminFotos = {
 
     reset() {
         this.fotos = [];
+        this.removidas = [];
         this.render();
     }
 };
