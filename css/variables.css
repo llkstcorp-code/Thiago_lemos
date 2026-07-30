@@ -1,0 +1,78 @@
+/* ===== VARIÁVEIS CSS - THIAGO LEMOS IMÓVEIS ===== */
+:root {
+    /* Cores principais (baseadas na logo) */
+    --color-primary: #c1ff00;        /* Verde-limão principal */
+    --color-primary-dark: #9fcc00;
+    --color-primary-light: #d9ff4d;
+    --color-secondary: #ff0080;      /* Rosa/Magenta para destaques */
+    --color-accent: #ffb800;         /* Amarelo/dourado para callouts */
+
+    /* Cores neutras */
+    --color-black: #0a0a0a;
+    --color-dark: #1a1a1a;
+    --color-gray-900: #1f1f1f;
+    --color-gray-800: #2a2a2a;
+    --color-gray-700: #3a3a3a;
+    --color-gray-600: #555;
+    --color-gray-500: #777;
+    --color-gray-400: #999;
+    --color-gray-300: #bbb;
+    --color-gray-200: #ddd;
+    --color-gray-100: #f5f5f5;
+    --color-white: #ffffff;
+
+    /* Cores semânticas */
+    --color-success: #25d366;
+    --color-whatsapp: #25d366;
+    --color-instagram: #e1306c;
+    --color-facebook: #1877f2;
+
+    /* Tipografia */
+    --font-heading: 'Playfair Display', Georgia, serif;
+    --font-body: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+
+    /* Tamanhos de fonte */
+    --fs-h1: clamp(2.5rem, 5vw, 4.5rem);
+    --fs-h2: clamp(2rem, 4vw, 3.5rem);
+    --fs-h3: clamp(1.5rem, 2.5vw, 2rem);
+    --fs-h4: 1.25rem;
+    --fs-body: 1rem;
+    --fs-small: 0.875rem;
+    --fs-xs: 0.75rem;
+
+    /* Espaçamentos */
+    --space-xs: 0.5rem;
+    --space-sm: 1rem;
+    --space-md: 1.5rem;
+    --space-lg: 2rem;
+    --space-xl: 3rem;
+    --space-2xl: 5rem;
+    --space-3xl: 7rem;
+
+    /* Layout */
+    --container-max: 1280px;
+    --border-radius-sm: 6px;
+    --border-radius: 12px;
+    --border-radius-lg: 20px;
+    --border-radius-full: 999px;
+
+    /* Sombras */
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+    --shadow: 0 4px 20px rgba(0,0,0,0.12);
+    --shadow-lg: 0 10px 40px rgba(0,0,0,0.15);
+    --shadow-xl: 0 20px 60px rgba(0,0,0,0.2);
+    --shadow-glow: 0 0 40px rgba(193, 255, 0, 0.3);
+
+    /* Transições */
+    --transition: 0.3s ease;
+    --transition-slow: 0.5s ease;
+    --transition-bounce: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    /* Z-index */
+    --z-base: 1;
+    --z-dropdown: 10;
+    --z-sticky: 100;
+    --z-fixed: 1000;
+    --z-modal: 10000;
+    --z-preloader: 99999;
+}

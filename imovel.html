@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Detalhes do imóvel - Thiago Lemos Imóveis">
+    <title id="page-title">Imóvel | Thiago Lemos Imóveis</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/imovel.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+    <!-- ===== HEADER / NAVBAR ===== -->
+    <header class="header" id="header">
+        <nav class="navbar container">
+            <a href="index.html#home" class="logo">
+                <div class="logo-icon">
+                    <img src="img/logo-icon-only.png" alt="Thiago Lemos Imóveis" class="logo-img">
+                </div>
+                <div class="logo-text">
+                    <span class="logo-name">THIAGO <strong>LEMOS</strong></span>
+                    <span class="logo-tag">IMÓVEIS</span>
+                </div>
+            </a>
+
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="index.html#home" class="nav-link">Início</a></li>
+                <li><a href="index.html#sobre" class="nav-link">Sobre</a></li>
+                <li><a href="index.html#imoveis" class="nav-link">Imóveis</a></li>
+                <li><a href="index.html#servicos" class="nav-link">Serviços</a></li>
+                <li><a href="index.html#contato" class="nav-link">Contato</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <a href="index.html#contato" class="btn btn-primary btn-sm">
+                    <i class="fab fa-whatsapp"></i> Fale Comigo
+                </a>
+                <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- ===== ESTADO: CARREGANDO ===== -->
+        <div id="estado-carregando" class="imovel-estado">
+            <div class="spinner"></div>
+            <p>Carregando imóvel...</p>
+        </div>
+
+        <!-- ===== ESTADO: NÃO ENCONTRADO ===== -->
+        <div id="estado-erro" class="imovel-estado" style="display:none;">
+            <i class="fas fa-home-alt-slash"></i>
+            <h2>Imóvel não encontrado</h2>
+            <p>Esse imóvel pode ter sido removido ou o link está incorreto.</p>
+            <a href="index.html#imoveis" class="btn btn-primary">Ver todos os imóveis</a>
+        </div>
+
+        <!-- ===== CONTEÚDO DO IMÓVEL ===== -->
+        <div id="imovel-conteudo" style="display:none;">
+
+            <!-- Breadcrumb -->
+            <div class="imovel-breadcrumb">
+                <div class="container">
+                    <a href="index.html">Início</a>
+                    <span>/</span>
+                    <a href="index.html#imoveis">Imóveis</a>
+                    <span>/</span>
+                    <span id="bc-titulo">...</span>
+                </div>
+            </div>
+
+            <!-- Galeria -->
+            <section class="imovel-galeria">
+                <div class="container">
+                    <div class="galeria-principal">
+                        <img id="foto-principal" src="" alt="">
+                        <div id="galeria-badge" class="imovel-badge" style="display:none;">DESTAQUE</div>
+                        <button class="galeria-nav galeria-prev" id="galeria-prev" aria-label="Foto anterior">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="galeria-nav galeria-next" id="galeria-next" aria-label="Próxima foto">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                        <span class="galeria-contador" id="galeria-contador">1 / 1</span>
+                    </div>
+                    <div class="galeria-thumbs" id="galeria-thumbs"></div>
+                </div>
+            </section>
+
+            <!-- Conteúdo principal -->
+            <section class="imovel-detalhes">
+                <div class="container imovel-detalhes-grid">
+
+                    <!-- Coluna esquerda -->
+                    <div class="imovel-info-principal">
+                        <span class="imovel-type" id="info-tipo">Apartamento</span>
+                        <h1 id="info-titulo">Título do imóvel</h1>
+                        <p class="imovel-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span id="info-endereco">Bairro, Cidade</span>
+                        </p>
+
+                        <div class="imovel-features imovel-features-lg">
+                            <span id="feat-quartos"><i class="fas fa-bed"></i> -- quartos</span>
+                            <span id="feat-suites"><i class="fas fa-door-closed"></i> -- suítes</span>
+                            <span id="feat-banheiros"><i class="fas fa-bath"></i> -- banheiros</span>
+                            <span id="feat-area"><i class="fas fa-ruler-combined"></i> -- m²</span>
+                            <span id="feat-vagas"><i class="fas fa-car"></i> -- vagas</span>
+                        </div>
+
+                        <div class="imovel-descricao">
+                            <h3>Sobre o imóvel</h3>
+                            <p id="info-descricao">Carregando descrição...</p>
+                        </div>
+
+                        <div class="imovel-amenidades" id="bloco-amenidades" style="display:none;">
+                            <h3>Comodidades</h3>
+                            <ul class="amenidades-lista" id="lista-amenidades"></ul>
+                        </div>
+
+                        <div class="imovel-codigo">
+                            Código: <strong id="info-codigo">--</strong>
+                        </div>
+                    </div>
+
+                    <!-- Coluna direita (sidebar) -->
+                    <aside class="imovel-sidebar">
+                        <div class="imovel-price-card">
+                            <span class="imovel-price-label">Valor</span>
+                            <span class="imovel-price-value" id="info-preco">Consulte</span>
+                            <div class="imovel-price-extra" id="info-condominio-iptu"></div>
+
+                            <button class="btn btn-primary btn-block" id="btn-whatsapp">
+                                <i class="fab fa-whatsapp"></i> Conversar no WhatsApp
+                            </button>
+
+                            <form class="imovel-lead-form" id="lead-form">
+                                <h4>Quero mais informações</h4>
+                                <div class="form-group">
+                                    <input type="text" id="lead-nome" placeholder="Nome completo" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="email" id="lead-email" placeholder="E-mail" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="tel" id="lead-telefone" placeholder="Telefone / WhatsApp" required>
+                                </div>
+                                <div class="form-group">
+                                    <textarea id="lead-mensagem" rows="3" placeholder="Mensagem (opcional)">Tenho interesse neste imóvel.</textarea>
+                                </div>
+                                <button type="submit" class="btn btn-outline btn-block">
+                                    Enviar mensagem
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="imovel-corretor-card" id="corretor-card" style="display:none;">
+                            <h4>Atendimento</h4>
+                            <p id="corretor-nome">Thiago Lemos</p>
+                            <p id="corretor-creci"></p>
+                        </div>
+                    </aside>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <a href="index.html#home" class="logo">
+                        <div class="logo-icon">
+                            <img src="img/logo-icon-only.png" alt="Thiago Lemos Imóveis" class="logo-img">
+                        </div>
+                        <div class="logo-text">
+                            <span class="logo-name">THIAGO <strong>LEMOS</strong></span>
+                            <span class="logo-tag">IMÓVEIS</span>
+                        </div>
+                    </a>
+                    <p>Há mais de 15 anos realizando o sonho do imóvel próprio com excelência, transparência e exclusividade.</p>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Links Rápidos</h4>
+                    <ul>
+                        <li><a href="index.html#home">Início</a></li>
+                        <li><a href="index.html#sobre">Sobre</a></li>
+                        <li><a href="index.html#imoveis">Imóveis</a></li>
+                        <li><a href="index.html#servicos">Serviços</a></li>
+                        <li><a href="index.html#contato">Contato</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Serviços</h4>
+                    <ul>
+                        <li><a href="index.html#servicos">Compra de Imóveis</a></li>
+                        <li><a href="index.html#servicos">Venda</a></li>
+                        <li><a href="index.html#servicos">Consultoria</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Horário de Atendimento</h4>
+                    <ul>
+                        <li><strong>Seg - Sex:</strong> 09h às 19h</li>
+                        <li><strong>Sábado:</strong> 09h às 14h</li>
+                        <li><strong>Domingo:</strong> Plantão (WhatsApp)</li>
+                    </ul>
+                    <div class="footer-creci">CRECI 35.314</div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 <strong>Thiago Lemos Imóveis</strong>. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Botão WhatsApp Flutuante -->
+    <a href="#" id="whatsapp-float" class="whatsapp-float" aria-label="Falar no WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+        <span class="whatsapp-pulse"></span>
+    </a>
+
+    <!-- Botão Voltar ao Topo -->
+    <button class="back-to-top" id="back-to-top" aria-label="Voltar ao topo">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/supabase-api.js"></script>
+    <script src="js/imovel.js"></script>
+</body>
+</html>
