@@ -179,17 +179,22 @@
 
                             <form class="imovel-lead-form" id="lead-form">
                                 <h4>Quero mais informações</h4>
-                                <div class="form-group">
-                                    <input type="text" id="lead-nome" placeholder="Nome completo" required>
+                                <!-- Honeypot anti-spam: invisível para pessoas, bots preenchem -->
+                                <div class="hp-field" aria-hidden="true">
+                                    <label for="lead-website">Não preencha este campo</label>
+                                    <input type="text" id="lead-website" name="website" tabindex="-1" autocomplete="off">
                                 </div>
                                 <div class="form-group">
-                                    <input type="email" id="lead-email" placeholder="E-mail" required>
+                                    <input type="text" id="lead-nome" placeholder="Nome completo" maxlength="100" required>
                                 </div>
                                 <div class="form-group">
-                                    <input type="tel" id="lead-telefone" placeholder="Telefone / WhatsApp" required>
+                                    <input type="email" id="lead-email" placeholder="E-mail" maxlength="150" required>
                                 </div>
                                 <div class="form-group">
-                                    <textarea id="lead-mensagem" rows="3" placeholder="Mensagem (opcional)">Tenho interesse neste imóvel.</textarea>
+                                    <input type="tel" id="lead-telefone" placeholder="Telefone / WhatsApp" maxlength="20" required>
+                                </div>
+                                <div class="form-group">
+                                    <textarea id="lead-mensagem" rows="3" placeholder="Mensagem (opcional)" maxlength="2000">Tenho interesse neste imóvel.</textarea>
                                 </div>
                                 <button type="submit" class="btn btn-outline btn-block">
                                     Enviar mensagem
@@ -272,7 +277,7 @@
             integrity="sha384-GFr3yTh5lJznCbZfpTtXnwboFsxqtTQoeTZCRHhE0579KrRmlCzen5AA8ohaB5ug" crossorigin="anonymous"></script>
     <!-- ?v= força o navegador a baixar a versão nova; incremente ao publicar mudanças -->
     <script src="js/supabase-config.js?v=2"></script>
-    <script src="js/supabase-api.js?v=2"></script>
-    <script src="js/imovel.js?v=2"></script>
+    <script src="js/supabase-api.js?v=3"></script>
+    <script src="js/imovel.js?v=3"></script>
 </body>
 </html>

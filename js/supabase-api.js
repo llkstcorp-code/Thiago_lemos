@@ -275,7 +275,9 @@ const LeadsAPI = {
             return { data: null, error: new Error('Supabase não configurado') };
         }
         try {
-            const { data, error } = await window.supabaseClient
+            // Sem .select(): o RLS só deixa staff LER a tabela de leads, então
+            // pedir a linha de volta faria o insert inteiro ser recusado.
+            const { error } = await window.supabaseClient
                 .from('leads')
                 .insert([{
                     nome: dados.nome,
@@ -286,11 +288,10 @@ const LeadsAPI = {
                     origem: dados.origem || 'site_formulario',
                     pagina_origem: window.location.href,
                     status: 'novo'
-                }])
-                .select();
+                }]);
 
             if (error) throw error;
-            return { data, error: null };
+            return { data: null, error: null };
         } catch (error) {
             console.error('Erro ao salvar lead:', error);
             return { data: null, error };

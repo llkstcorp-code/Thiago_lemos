@@ -617,8 +617,15 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Função: registrar criação de lead
+-- SECURITY DEFINER: o lead vem de um visitante anônimo, que não tem
+-- permissão de escrever em lead_interacoes. Sem isso o gatilho é barrado
+-- pelo RLS e derruba o INSERT do lead inteiro.
 CREATE OR REPLACE FUNCTION log_lead_creation()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
 BEGIN
     INSERT INTO public.lead_interacoes (
         lead_id, tipo, descricao, status_novo
@@ -629,7 +636,7 @@ BEGIN
     );
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$;
 
 -- Função: audit log em imóveis
 CREATE OR REPLACE FUNCTION audit_imoveis()
@@ -1097,8 +1104,24 @@ CREATE POLICY "imovel_amenidades_staff_all" ON public.imovel_amenidades
 
 -- LEADS (público pode inserir, staff pode ler/editar)
 DROP POLICY IF EXISTS "leads_public_insert" ON public.leads;
+-- O visitante anônimo pode criar um lead, mas só com a forma de um lead
+-- de verdade: os campos de gestão são exclusivos do painel admin.
 CREATE POLICY "leads_public_insert" ON public.leads
-    FOR INSERT WITH CHECK (true);
+    FOR INSERT
+    WITH CHECK (
+        status = 'novo'
+        AND origem IN ('site_formulario', 'site_busca')
+        AND corretor_id IS NULL
+        AND notas_admin IS NULL
+        AND valor_interesse IS NULL
+        AND data_contato IS NULL
+        AND data_conversao IS NULL
+        AND arquivado = false
+        AND char_length(nome) BETWEEN 2 AND 100
+        AND char_length(email) BETWEEN 5 AND 150
+        AND char_length(telefone) BETWEEN 8 AND 20
+        AND char_length(COALESCE(mensagem, '')) <= 2000
+    );
 
 DROP POLICY IF EXISTS "leads_staff_read" ON public.leads;
 CREATE POLICY "leads_staff_read" ON public.leads

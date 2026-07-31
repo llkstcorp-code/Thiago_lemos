@@ -150,18 +150,46 @@
 
         // Formulário de lead
         const leadForm = document.getElementById('lead-form');
+        // Mesmos limites do formulário da home, exigidos pela política de RLS
+        const LIMITES = { nome: 100, email: 150, telefone: 20, mensagem: 2000 };
+        const limpar = (valor, max) => valor.trim().replace(/\s+/g, ' ').slice(0, max);
+
         leadForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const dados = {
-                nome: document.getElementById('lead-nome').value,
-                email: document.getElementById('lead-email').value,
-                telefone: document.getElementById('lead-telefone').value,
-                mensagem: document.getElementById('lead-mensagem').value,
-                imovel_id: imovel.id,
-                origem: 'pagina_imovel'
-            };
 
             const submitBtn = leadForm.querySelector('button[type="submit"]');
+
+            // Honeypot: se veio preenchido é bot, fingimos sucesso e não enviamos
+            if (document.getElementById('lead-website').value !== '') {
+                leadForm.reset();
+                submitBtn.textContent = 'Mensagem enviada!';
+                return;
+            }
+
+            const dados = {
+                nome: limpar(document.getElementById('lead-nome').value, LIMITES.nome),
+                email: limpar(document.getElementById('lead-email').value, LIMITES.email),
+                telefone: limpar(document.getElementById('lead-telefone').value, LIMITES.telefone),
+                mensagem: limpar(document.getElementById('lead-mensagem').value, LIMITES.mensagem),
+                imovel_id: imovel.id,
+                // 'pagina_imovel' não existe no enum lead_origem; o imóvel de
+                // origem já fica registrado em imovel_id acima
+                origem: 'site_formulario'
+            };
+
+            if (dados.nome.length < 2) {
+                submitBtn.textContent = 'Informe seu nome completo';
+                return;
+            }
+            if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(dados.email)) {
+                submitBtn.textContent = 'Informe um e-mail válido';
+                return;
+            }
+            if (dados.telefone.replace(/\D/g, '').length < 10) {
+                submitBtn.textContent = 'Informe um telefone com DDD';
+                return;
+            }
+
             submitBtn.disabled = true;
             submitBtn.textContent = 'Enviando...';
 
