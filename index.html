@@ -8,6 +8,25 @@
     <meta name="keywords" content="imóveis, comprar imóvel, vender imóvel, apartamentos, casas, Thiago Lemos, imobiliária">
     <title>Thiago Lemos Imóveis | O Imóvel dos Seus Sonhos</title>
 
+    <!-- Segurança: trava de onde o site pode carregar scripts, estilos e dados -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        base-uri 'self';
+        object-src 'none';
+        form-action 'self';
+        script-src 'self' https://unpkg.com https://cdn.jsdelivr.net;
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com;
+        font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com;
+        img-src 'self' data: blob: https://mrbbuykzuriajmjzmrde.supabase.co;
+        connect-src 'self' https://mrbbuykzuriajmjzmrde.supabase.co wss://mrbbuykzuriajmjzmrde.supabase.co;
+        frame-src 'none';
+        upgrade-insecure-requests;
+    ">
+    <!-- Não vaza a URL completa da página para sites externos -->
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <!-- Anti-clickjacking (o GitHub Pages não permite enviar X-Frame-Options) -->
+    <script src="js/seguranca.js?v=1"></script>
+
     <!-- Favicon -->
     <link rel="icon" href="img/favicon.ico" sizes="any">
     <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
@@ -20,14 +39,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          integrity="sha384-iw3OoTErCYJJB9mCa8LNS2hbsQ7M3C0EpIsO/H5+EGAkPGc6rk+V8i04oW/K5xq0" crossorigin="anonymous">
 
     <!-- AOS Animações -->
-    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css"
+          integrity="sha384-/rJKQnzOkEo+daG0jMjU1IwwY9unxt1NBw3Ef2fmOJ3PW/TfAg2KXVoWwMZQZtw9" crossorigin="anonymous">
 
     <!-- Estilos -->
     <link rel="stylesheet" href="css/variables.css">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=3">
     <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
@@ -465,17 +486,22 @@
                 <div class="cta-form-wrapper">
                     <h3>Envie sua mensagem</h3>
                     <form class="cta-form" id="cta-form">
-                        <div class="form-group">
-                            <input type="text" placeholder="Nome completo" required>
+                        <!-- Honeypot anti-spam: invisível para pessoas, bots preenchem -->
+                        <div class="hp-field" aria-hidden="true">
+                            <label for="website">Não preencha este campo</label>
+                            <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
                         </div>
                         <div class="form-group">
-                            <input type="email" placeholder="E-mail" required>
+                            <input type="text" id="contato-nome" placeholder="Nome completo" maxlength="100" required>
                         </div>
                         <div class="form-group">
-                            <input type="tel" placeholder="Telefone / WhatsApp" required>
+                            <input type="email" id="contato-email" placeholder="E-mail" maxlength="150" required>
                         </div>
                         <div class="form-group">
-                            <select required>
+                            <input type="tel" id="contato-telefone" placeholder="Telefone / WhatsApp" maxlength="20" required>
+                        </div>
+                        <div class="form-group">
+                            <select id="contato-interesse" required>
                                 <option value="">Interesse</option>
                                 <option>Comprar imóvel</option>
                                 <option>Vender imóvel</option>
@@ -483,7 +509,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <textarea rows="4" placeholder="Sua mensagem" required></textarea>
+                            <textarea id="contato-mensagem" rows="4" placeholder="Sua mensagem" maxlength="2000" required></textarea>
                         </div>
                         <button type="submit" class="btn btn-primary btn-block">
                             <i class="fab fa-whatsapp"></i> Enviar Mensagem
@@ -563,14 +589,16 @@
     </button>
 
     <!-- Scripts -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"
+            integrity="sha384-wziAfh6b/qT+3LrqebF9WeK4+J5sehS6FA10J1t3a866kJ/fvU5UwofWnQyzLtwu" crossorigin="anonymous"></script>
 
     <!-- Supabase (opcional - requer configuração) -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"
+            integrity="sha384-GFr3yTh5lJznCbZfpTtXnwboFsxqtTQoeTZCRHhE0579KrRmlCzen5AA8ohaB5ug" crossorigin="anonymous"></script>
     <!-- ?v= força o navegador a baixar a versão nova; incremente ao publicar mudanças -->
     <script src="js/supabase-config.js?v=2"></script>
     <script src="js/supabase-api.js?v=2"></script>
 
-    <script src="js/main.js?v=2"></script>
+    <script src="js/main.js?v=3"></script>
 </body>
 </html>

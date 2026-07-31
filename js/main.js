@@ -395,16 +395,62 @@
     const ctaForm = document.getElementById('cta-form');
     const WHATSAPP_NUMERO = '5535997418298';
     if (ctaForm) {
+        // Limites de tamanho por campo, para não gravar lixo no banco
+        const LIMITES = { nome: 100, email: 150, telefone: 20, interesse: 50, mensagem: 2000 };
+
+        // Intervalo mínimo entre dois envios do mesmo navegador
+        const INTERVALO_MIN_MS = 30 * 1000;
+
+        const limpar = (valor, max) => valor.trim().replace(/\s+/g, ' ').slice(0, max);
+
         ctaForm.addEventListener('submit', (e) => {
             e.preventDefault();
 
+            // Honeypot: campo escondido que humanos não veem e bots costumam preencher.
+            // Se veio preenchido, fingimos sucesso e não enviamos nada.
+            const honeypot = ctaForm.querySelector('input[name="website"]');
+            if (honeypot && honeypot.value !== '') {
+                ctaForm.reset();
+                showNotification('Mensagem enviada com sucesso!', 'success');
+                return;
+            }
+
+            // Trava simples de repetição (evita envio acidental ou em rajada)
+            const ultimoEnvio = Number(localStorage.getItem('ultimoEnvioContato') || 0);
+            if (Date.now() - ultimoEnvio < INTERVALO_MIN_MS) {
+                showNotification('Você acabou de enviar uma mensagem. Aguarde um instante.', 'error');
+                return;
+            }
+
+            // Selecionar por id: o honeypot também é um input[type="text"] do form
             const formData = {
-                nome: ctaForm.querySelector('input[type="text"]').value,
-                email: ctaForm.querySelector('input[type="email"]').value,
-                telefone: ctaForm.querySelector('input[type="tel"]').value,
-                interesse: ctaForm.querySelector('select').value,
-                mensagem: ctaForm.querySelector('textarea').value
+                nome: limpar(document.getElementById('contato-nome').value, LIMITES.nome),
+                email: limpar(document.getElementById('contato-email').value, LIMITES.email),
+                telefone: limpar(document.getElementById('contato-telefone').value, LIMITES.telefone),
+                interesse: limpar(document.getElementById('contato-interesse').value, LIMITES.interesse),
+                mensagem: limpar(document.getElementById('contato-mensagem').value, LIMITES.mensagem)
             };
+
+            if (formData.nome.length < 2) {
+                showNotification('Informe seu nome completo.', 'error');
+                return;
+            }
+            if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(formData.email)) {
+                showNotification('Informe um e-mail válido.', 'error');
+                return;
+            }
+            // Telefone brasileiro: 10 dígitos (fixo) ou 11 (celular), com ou sem máscara
+            const digitosTelefone = formData.telefone.replace(/\D/g, '');
+            if (digitosTelefone.length < 10 || digitosTelefone.length > 13) {
+                showNotification('Informe um telefone válido com DDD.', 'error');
+                return;
+            }
+            if (formData.mensagem.length < 5) {
+                showNotification('Escreva sua mensagem.', 'error');
+                return;
+            }
+
+            localStorage.setItem('ultimoEnvioContato', String(Date.now()));
 
             // Salva o lead no banco em segundo plano (não bloqueia o redirecionamento)
             if (window.LeadsAPI && !SUPABASE_CONFIG.url.includes('SEU-PROJETO')) {
@@ -425,7 +471,7 @@
                 `${formData.mensagem}`;
 
             const linkWhatsapp = `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(textoMensagem)}`;
-            window.open(linkWhatsapp, '_blank');
+            window.open(linkWhatsapp, '_blank', 'noopener');
             ctaForm.reset();
         });
     }
