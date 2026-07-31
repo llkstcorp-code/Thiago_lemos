@@ -1015,3 +1015,30 @@ input:focus, select:focus, textarea:focus {
     .menu-mobile { display: flex; }
     .dashboard-grid { grid-template-columns: 1fr; }
 }
+
+/* ===== LEADS: ARQUIVAR ===== */
+.leads-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 0.75rem;
+}
+
+.toggle-arquivados {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+.toggle-arquivados input {
+    width: auto;
+    margin: 0;
+    cursor: pointer;
+}
+
+/* Lead arquivado continua legível, mas fica visualmente em segundo plano */
+.data-table tr.linha-arquivada {
+    opacity: 0.55;
+}

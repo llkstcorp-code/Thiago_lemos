@@ -111,8 +111,10 @@ const AdminDashboard = {
                 const iniciais = lead.nome.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
                 const msg = (lead.mensagem || '').substring(0, 60) || '—';
 
+                // Sem onclick inline: o CSP da página bloqueia handlers inline.
+                // O listener é ligado depois, pelo data-lead-id.
                 return `
-                    <div class="item" style="cursor: pointer;" onclick="AdminLeads.verDetalhes('${lead.id}')">
+                    <div class="item" style="cursor: pointer;" data-lead-id="${lead.id}">
                         <div class="thumb" style="display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--primary);">
                             ${iniciais}
                         </div>
@@ -124,6 +126,10 @@ const AdminDashboard = {
                     </div>
                 `;
             }).join('');
+
+            container.querySelectorAll('[data-lead-id]').forEach(item => {
+                item.addEventListener('click', () => AdminLeads.verDetalhes(item.dataset.leadId));
+            });
         } catch (error) {
             container.innerHTML = '<div class="empty-state-mini">Erro ao carregar</div>';
         }

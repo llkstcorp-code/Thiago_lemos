@@ -434,13 +434,16 @@ const AdminImoveis = {
                     Esta ação não pode ser desfeita. Todas as fotos serão apagadas.
                 </p>
                 <div style="display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1.5rem;">
-                    <button class="btn btn-outline" onclick="AdminUI.fecharModal()">Cancelar</button>
+                    <button class="btn btn-outline" id="btn-cancelar-delete">Cancelar</button>
                     <button class="btn btn-danger" id="btn-confirmar-delete">
                         <i class="fas fa-trash"></i> Sim, excluir
                     </button>
                 </div>
             `
         });
+
+        // Sem onclick inline: o CSP da página bloqueia handlers inline
+        document.getElementById('btn-cancelar-delete').addEventListener('click', () => AdminUI.fecharModal());
 
         document.getElementById('btn-confirmar-delete').addEventListener('click', async () => {
             const { error } = await this.deletar(id);

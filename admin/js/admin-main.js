@@ -247,11 +247,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ============================================
     // FILTRO DE LEADS POR STATUS
     // ============================================
+    const chkArquivados = document.getElementById('chk-ver-arquivados');
+
     document.querySelectorAll('.lead-stat').forEach(card => {
         card.addEventListener('click', () => {
             const filtro = card.dataset.filter;
-            AdminLeads.renderTabela(filtro);
+            AdminLeads.renderTabela(filtro, chkArquivados?.checked || false);
         });
+    });
+
+    // Mostrar/esconder leads arquivados
+    chkArquivados?.addEventListener('change', () => {
+        AdminLeads.renderTabela(null, chkArquivados.checked);
     });
 });
 
